@@ -23,7 +23,7 @@
     ],
     "Stack": [
         {"CardFace": 2, "CardSuit": 3, "Position": {"x": 0, "y": 0}},
-        {"CardFace": 13, "CardSuit": 2, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 12, "CardSuit": 2, "Position": {"x": 0, "y": 0}},
         {"CardFace": 7, "CardSuit": 1, "Position": {"x": 0, "y": 0}},
         {"CardFace": 10, "CardSuit": 0, "Position": {"x": 0, "y": 0}},
         {"CardFace": 5, "CardSuit": 3, "Position": {"x": 0, "y": 0}},

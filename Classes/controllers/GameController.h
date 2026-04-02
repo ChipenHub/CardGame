@@ -3,18 +3,22 @@
 
 #include "cocos2d.h"
 #include "models/GameModel.h"
+#include "managers/UndoManager.h"
+#include "controllers/PlayFieldController.h"
+#include "controllers/StackController.h"
 #include "views/GameView.h"
 
 /**
  * GameController
- * 游戏主控制器（Phase 1 最小实现）
+ * 游戏主控制器
  *
  * 职责：
- *   - 加载关卡配置，生成 GameModel
- *   - 创建 GameView 并挂载到父节点
- *   - 根据 GameModel 初始化各区域的视图（CardView 布局）
- *
- * Phase 2 起补充：子控制器、交互绑定、胜负判定
+ *   - 加载关卡 → 生成 GameModel
+ *   - 创建 GameView，协调子控制器初始化
+ *   - 绑定各区域回调（点击主牌区 / 备用牌堆 / Undo 按钮）
+ *   - 维护动画锁 _isAnimating，期间屏蔽所有交互
+ *   - 胜负检测
+ *   - 协调 Undo 流程（分发给对应子控制器）
  */
 class GameController
 {
@@ -29,23 +33,37 @@ public:
      */
     void startGame(const std::string& levelConfigPath, cocos2d::Node* parentNode);
 
+    /** 处理 Undo 按钮点击 */
+    void handleUndo();
+
 private:
-    GameModel   _gameModel;
-    GameView*   _gameView;
+    // --- 数据 ---
+    GameModel        _gameModel;
+    UndoManager      _undoManager;
 
-    /** 从配置文件加载并生成 GameModel */
+    // --- 子控制器 ---
+    PlayFieldController _playFieldController;
+    StackController     _stackController;
+
+    // --- 视图 ---
+    GameView* _gameView;
+
+    // --- 状态 ---
+    bool _isAnimating;
+
+    // --- 初始化流程 ---
     void _initModel(const std::string& levelConfigPath);
+    void _initViews(cocos2d::Node* parentNode);
+    void _initControllers();
+    void _bindCallbacks();
 
-    /** 创建 GameView 并挂载 */
-    void _initView(cocos2d::Node* parentNode);
+    // --- 动画锁 ---
+    void _setAnimationLock(bool locked);
 
-    /**
-     * 根据 GameModel 填充视图：
-     *   - 主牌区每张牌创建 CardView，按 position 放置
-     *   - 备用牌堆初始化 StackView
-     *   - 初始底牌创建 CardView 并交给 TrayView
-     */
-    void _populateViews();
+    // --- 胜负检测（在动画解锁后调用） ---
+    void _checkGameState();
+    void _onGameWin();
+    void _onGameLose();
 };
 
 #endif // __GAME_CONTROLLER_H__

@@ -162,10 +162,18 @@ void CardView::showBack()
 
 void CardView::playFlipToFrontAnimation(float duration, std::function<void()> onComplete)
 {
-    // Phase 1 简单实现：直接切换，无动画
-    // Phase 2 补充：ScaleTo X=0 → showFront → ScaleTo X=1
-    showFront();
-    if (onComplete) onComplete();
+    // X 轴缩放到 0 → 切换为正面 → X 轴展开到 1
+    float half = duration * 0.5f;
+
+    auto scaleOut = ScaleTo::create(half, 0.0f, 1.0f); // scaleX→0, scaleY不变
+    auto flip     = CallFunc::create([this]() { showFront(); });
+    auto scaleIn  = ScaleTo::create(half, 1.0f, 1.0f);
+    auto notify   = CallFunc::create([onComplete]()
+    {
+        if (onComplete) onComplete();
+    });
+
+    runAction(Sequence::create(scaleOut, flip, scaleIn, notify, nullptr));
 }
 
 void CardView::playMoveToAnimation(const Vec2& targetWorldPos, float duration,

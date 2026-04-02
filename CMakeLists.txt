@@ -60,6 +60,11 @@ list(APPEND GAME_SOURCE
 
      # services
      Classes/services/GameModelFromLevelGenerator.cpp
+     Classes/services/CardAbilityRegistry.cpp
+     Classes/services/MatchRuleService.cpp
+
+     # managers
+     Classes/managers/UndoManager.cpp
 
      # views
      Classes/views/CardView.cpp
@@ -70,6 +75,8 @@ list(APPEND GAME_SOURCE
 
      # controllers
      Classes/controllers/GameController.cpp
+     Classes/controllers/PlayFieldController.cpp
+     Classes/controllers/StackController.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
@@ -89,6 +96,15 @@ list(APPEND GAME_HEADER
 
      # services
      Classes/services/GameModelFromLevelGenerator.h
+     Classes/services/ICardAbility.h
+     Classes/services/CardAbilityRegistry.h
+     Classes/services/MatchRuleService.h
+
+     # models (undo)
+     Classes/models/UndoModel.h
+
+     # managers
+     Classes/managers/UndoManager.h
 
      # views
      Classes/views/CardView.h
@@ -99,6 +115,8 @@ list(APPEND GAME_HEADER
 
      # controllers
      Classes/controllers/GameController.h
+     Classes/controllers/PlayFieldController.h
+     Classes/controllers/StackController.h
      )
 
 if(ANDROID)
