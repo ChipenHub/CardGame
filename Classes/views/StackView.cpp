@@ -89,19 +89,14 @@ cocos2d::Vec2 StackView::popTopCard()
 
 void StackView::pushBackCard()
 {
-    // 新牌加在堆顶（x=0），已有牌不动
     Sprite* card = Sprite::create(CardResConfig::getCoveredPath());
     if (card)
     {
         card->setAnchorPoint(Vec2(0.5f, 0.5f));
-        card->setPosition(Vec2(0.0f, 0.0f)); // 右端固定位
         addChild(card, static_cast<int>(_stackCards.size()));
         _stackCards.push_back(card);
-
-        int n = static_cast<int>(_stackCards.size());
-        float totalWidth = CardView::kCardWidth
-                           + (n > 1 ? static_cast<float>(n - 1) * kStackCardOffsetX : 0.0f);
-        setContentSize(Size(totalWidth, CardView::kCardHeight));
+        // relayout 保证所有牌相邻，新牌在最右端（x=0），旧牌向左依次排列
+        _relayout();
     }
 }
 
