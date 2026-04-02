@@ -52,10 +52,10 @@ std::string CardResConfig::getSuitIconPath(CardSuitType suit)
 
 std::string CardResConfig::getCoveredPath()
 {
-    return "views/card_covered.png";
+    return "views/ui/card_covered.png";
 }
 
 std::string CardResConfig::getCardBgPath()
 {
-    return "views/card_bg.png";
+    return "views/ui/card_bg.png";
 }

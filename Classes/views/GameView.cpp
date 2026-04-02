@@ -44,7 +44,7 @@ bool GameView::init()
 void GameView::_initLayout()
 {
     // --- 背景 ---
-    _bgSprite = Sprite::create("views/game_bg.png");
+    _bgSprite = Sprite::create("views/ui/game_bg.png");
     if (_bgSprite)
     {
         _bgSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
