@@ -92,7 +92,9 @@ void GameModelFromLevelGenerator::_computeCoverRelations(
 
     for (size_t i = 0; i < cards.size(); ++i)
     {
-        for (size_t j = 0; j < cards.size(); ++j)
+        for (size_t j = i + 1 
+                /* 过去放的牌无需遍历，不可能覆盖当前的牌 */ 
+            ; j < cards.size(); ++j)
         {
             if (i == j) continue;
 
@@ -100,7 +102,7 @@ void GameModelFromLevelGenerator::_computeCoverRelations(
             const auto& B = cards[j];   // 候选遮挡牌
 
             // B 必须在 A 的视觉上方（y 更大）才可能遮挡 A
-            if (B.position.y <= A.position.y + kYEpsilon) continue;
+            // if (B.position.y <= A.position.y + kYEpsilon) continue;
 
             cocos2d::Rect rectA(A.position.x - halfW, A.position.y - halfH, cardWidth, cardHeight);
             cocos2d::Rect rectB(B.position.x - halfW, B.position.y - halfH, cardWidth, cardHeight);
