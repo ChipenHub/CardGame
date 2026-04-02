@@ -1,0 +1,35 @@
+{
+    "Playfield": [
+        {"CardFace": 4, "CardSuit": 2, "Position": {"x": 210, "y": 470}},
+        {"CardFace": 4, "CardSuit": 3, "Position": {"x": 870, "y": 470}},
+        {"CardFace": 7, "CardSuit": 0, "Position": {"x": 320, "y": 600}},
+        {"CardFace": 7, "CardSuit": 1, "Position": {"x": 760, "y": 600}},
+        {"CardFace": 10, "CardSuit": 2, "Position": {"x": 200, "y": 730}},
+        {"CardFace": 10, "CardSuit": 3, "Position": {"x": 880, "y": 730}},
+        {"CardFace": 13, "CardSuit": 0, "Position": {"x": 450, "y": 700}},
+        {"CardFace": 13, "CardSuit": 1, "Position": {"x": 630, "y": 700}},
+        {"CardFace": 1, "CardSuit": 2, "Position": {"x": 540, "y": 840}},
+        {"CardFace": 5, "CardSuit": 3, "Position": {"x": 270, "y": 960}},
+        {"CardFace": 5, "CardSuit": 0, "Position": {"x": 810, "y": 960}},
+        {"CardFace": 8, "CardSuit": 1, "Position": {"x": 370, "y": 1080}},
+        {"CardFace": 8, "CardSuit": 2, "Position": {"x": 710, "y": 1080}},
+        {"CardFace": 11, "CardSuit": 3, "Position": {"x": 210, "y": 1160}},
+        {"CardFace": 11, "CardSuit": 0, "Position": {"x": 870, "y": 1160}},
+        {"CardFace": 3, "CardSuit": 1, "Position": {"x": 510, "y": 1210}},
+        {"CardFace": 6, "CardSuit": 2, "Position": {"x": 540, "y": 1260}},
+        {"CardFace": 9, "CardSuit": 3, "Position": {"x": 320, "y": 1230}},
+        {"CardFace": 9, "CardSuit": 0, "Position": {"x": 760, "y": 1230}},
+        {"CardFace": 12, "CardSuit": 1, "Position": {"x": 540, "y": 1280}}
+    ],
+    "Stack": [
+        {"CardFace": 2, "CardSuit": 3, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 12, "CardSuit": 2, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 7, "CardSuit": 1, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 10, "CardSuit": 0, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 5, "CardSuit": 3, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 8, "CardSuit": 2, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 1, "CardSuit": 1, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 12, "CardSuit": 0, "Position": {"x": 0, "y": 0}},
+        {"CardFace": 4, "CardSuit": 3, "Position": {"x": 0, "y": 0}}
+    ]
+}
