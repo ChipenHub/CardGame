@@ -46,7 +46,8 @@ private:
     StackController     _stackController;
 
     // --- 视图 ---
-    GameView* _gameView;
+    GameView*             _gameView;
+    cocos2d::Label*       _statusLabel; // 胜/败提示，有操作时清除
 
     // --- 状态 ---
     bool _isAnimating;

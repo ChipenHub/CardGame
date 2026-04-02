@@ -1,4 +1,5 @@
 #include "GameModelFromLevelGenerator.h"
+#include <algorithm>
 
 // card_bg.png 实际像素尺寸（不缩放）
 static const float kCardWidth  = 182.0f;
@@ -61,11 +62,13 @@ GameModel GameModelFromLevelGenerator::generate(const LevelConfig& config)
         }
         else
         {
-            // Stack[1..] → 备用牌堆（背面朝上），按配置顺序入栈
-            // 配置中最后一个为堆顶（最先被翻出）
             model.stackCardIds.push_back(card.id);
         }
     }
+
+    // stackCardIds 目前是配置文件顺序 [Stack[1], Stack[2], ..., Stack[N]]
+    // StackController 用 back() 弹出，需反转使 back() == Stack[1]（最先弹出）
+    std::reverse(model.stackCardIds.begin(), model.stackCardIds.end());
 
     return model;
 }

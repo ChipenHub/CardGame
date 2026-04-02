@@ -7,6 +7,7 @@ USING_NS_CC;
 
 GameController::GameController()
     : _gameView(nullptr)
+    , _statusLabel(nullptr)
     , _isAnimating(false)
 {}
 
@@ -159,6 +160,13 @@ void GameController::_setAnimationLock(bool locked)
 
 void GameController::_checkGameState()
 {
+    // 每次重新检测前清除上一次的提示标签（Undo 后状态改变时自然消失）
+    if (_statusLabel)
+    {
+        _statusLabel->removeFromParent();
+        _statusLabel = nullptr;
+    }
+
     if (_playFieldController.isPlayFieldCleared())
     {
         _onGameWin();
@@ -174,23 +182,22 @@ void GameController::_checkGameState()
 
 void GameController::_onGameWin()
 {
-    // Phase 2 简单提示；Phase 3 替换为动画 / 关卡结算界面
-    auto label = Label::createWithSystemFont("YOU WIN!", "Arial", 80);
-    if (label && _gameView)
+    _statusLabel = Label::createWithSystemFont("YOU WIN!", "Arial", 80);
+    if (_statusLabel && _gameView)
     {
-        label->setPosition(Vec2(540, 1040));
-        label->setColor(Color3B(50, 200, 50));
-        _gameView->addChild(label, 999);
+        _statusLabel->setPosition(Vec2(540, 1040));
+        _statusLabel->setColor(Color3B(50, 200, 50));
+        _gameView->addChild(_statusLabel, 999);
     }
 }
 
 void GameController::_onGameLose()
 {
-    auto label = Label::createWithSystemFont("NO MORE MOVES", "Arial", 60);
-    if (label && _gameView)
+    _statusLabel = Label::createWithSystemFont("NO MORE MOVES", "Arial", 60);
+    if (_statusLabel && _gameView)
     {
-        label->setPosition(Vec2(540, 1040));
-        label->setColor(Color3B(200, 50, 50));
-        _gameView->addChild(label, 999);
+        _statusLabel->setPosition(Vec2(540, 1040));
+        _statusLabel->setColor(Color3B(200, 50, 50));
+        _gameView->addChild(_statusLabel, 999);
     }
 }
