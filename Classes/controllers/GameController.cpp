@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "configs/loaders/LevelConfigLoader.h"
 #include "services/GameModelFromLevelGenerator.h"
+#include "services/AudioService.h"
 #include "views/CardView.h"
 
 USING_NS_CC;
@@ -18,6 +19,8 @@ GameController::~GameController()
 
 void GameController::startGame(const std::string& levelConfigPath, Node* parentNode)
 {
+    AudioService::preload();
+    AudioService::playBgm();
     _initModel(levelConfigPath);
     _initViews(parentNode);
     _initControllers();
@@ -100,6 +103,7 @@ void GameController::_bindCallbacks()
     stackView->setOnClickCallback([this]()
     {
         if (_isAnimating) return;
+        AudioService::playClick();
         _stackController.handleStackClick();
     });
 
@@ -107,6 +111,7 @@ void GameController::_bindCallbacks()
     _gameView->setOnUndoClickCallback([this]()
     {
         if (_isAnimating) return;
+        AudioService::playClick();
         handleUndo();
     });
 
@@ -195,6 +200,7 @@ static void playPopIn(cocos2d::Node* node)
 void GameController::_onGameWin()
 {
     if (!_gameView) return;
+    AudioService::playWin();
     auto* sprite = Sprite::create("views/ui/success.png");
     if (!sprite) return;
     sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
@@ -207,6 +213,7 @@ void GameController::_onGameWin()
 void GameController::_onGameLose()
 {
     if (!_gameView) return;
+    AudioService::playLose();
     auto* sprite = Sprite::create("views/ui/no_more_moves.png");
     if (!sprite) return;
     sprite->setAnchorPoint(Vec2(0.5f, 0.5f));

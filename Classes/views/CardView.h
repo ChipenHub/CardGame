@@ -56,6 +56,10 @@ public:
     void playFlipToFrontAnimation(float duration = 0.3f,
                                    std::function<void()> onComplete = nullptr);
 
+    /** 翻牌动画：正面 → 背面（Undo 恢复遮挡时使用） */
+    void playFlipToBackAnimation(float duration = 0.3f,
+                                  std::function<void()> onComplete = nullptr);
+
     /**
      * 移动到目标位置（世界坐标）
      * @param targetWorldPos 目标世界坐标

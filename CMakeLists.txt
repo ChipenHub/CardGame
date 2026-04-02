@@ -62,6 +62,7 @@ list(APPEND GAME_SOURCE
      Classes/services/GameModelFromLevelGenerator.cpp
      Classes/services/CardAbilityRegistry.cpp
      Classes/services/MatchRuleService.cpp
+     Classes/services/AudioService.cpp
 
      # managers
      Classes/managers/UndoManager.cpp
@@ -99,6 +100,7 @@ list(APPEND GAME_HEADER
      Classes/services/ICardAbility.h
      Classes/services/CardAbilityRegistry.h
      Classes/services/MatchRuleService.h
+     Classes/services/AudioService.h
 
      # models (undo)
      Classes/models/UndoModel.h

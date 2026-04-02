@@ -86,21 +86,27 @@ void GameModelFromLevelGenerator::_computeCoverRelations(
         card.coveredByIds.clear();
     }
 
+    // 遮挡规则：两牌矩形有重叠，且 B.y > A.y（B 在视觉上方）则 B 遮挡 A
+    // 使用 1px 的 y 容差过滤同层牌（完全水平的牌不互相遮挡）
+    static const float kYEpsilon = 1.0f;
+
     for (size_t i = 0; i < cards.size(); ++i)
     {
-        for (size_t j = i + 1; j < cards.size(); ++j)   // j > i  ⇒  j 是后放的牌，层级更高
+        for (size_t j = 0; j < cards.size(); ++j)
         {
-            const auto& A = cards[i];   // 先放的牌（可能被遮挡）
-            const auto& B = cards[j];   // 后放的牌（可能遮挡别人）
+            if (i == j) continue;
 
-            // 计算两张牌的矩形（中心点）
+            const auto& A = cards[i];   // 被检查是否被遮挡的牌
+            const auto& B = cards[j];   // 候选遮挡牌
+
+            // B 必须在 A 的视觉上方（y 更大）才可能遮挡 A
+            if (B.position.y <= A.position.y + kYEpsilon) continue;
+
             cocos2d::Rect rectA(A.position.x - halfW, A.position.y - halfH, cardWidth, cardHeight);
             cocos2d::Rect rectB(B.position.x - halfW, B.position.y - halfH, cardWidth, cardHeight);
 
             if (rectA.intersectsRect(rectB))
             {
-                // 后放的 B 遮挡先放的 A
-                // 所以 A 被 B 遮挡
                 cards[i].coveredByIds.push_back(B.id);
             }
         }

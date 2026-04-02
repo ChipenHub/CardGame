@@ -1,6 +1,7 @@
 #include "PlayFieldController.h"
 #include "services/MatchRuleService.h"
 #include "services/CardAbilityRegistry.h"
+#include "services/AudioService.h"
 #include "views/CardView.h"
 #include "configs/models/CardResConfig.h"
 #include <algorithm>
@@ -79,6 +80,7 @@ bool PlayFieldController::handleCardClick(int cardId)
     cv->playMoveToAnimation(trayWorldPos, 0.3f, [this, cv, cardId, trayWorldPos, animLayer]()
     {
         // 动画完成：将牌交给 TrayView
+        AudioService::playClear();
         cv->removeFromParent();
         _trayView->setTopCard(cv);
 
@@ -172,7 +174,7 @@ void PlayFieldController::undoMatch(const UndoRecord& record)
         revCard.faceUp = false;
 
         CardView* revCv = _playFieldView->getCardView(revealedId);
-        if (revCv) revCv->showBack();
+        if (revCv) revCv->playFlipToBackAnimation(0.3f, nullptr);
     }
 
     // 4. 将牌飞回原位
