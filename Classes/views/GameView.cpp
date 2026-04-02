@@ -6,16 +6,13 @@ USING_NS_CC;
 static const float kScreenW        = 1080.0f;
 static const float kScreenH        = 2080.0f;
 static const float kBottomAreaH    = 580.0f;
-static const float kPlayFieldY     = kBottomAreaH;          // PlayFieldView 的 y 起点
-static const float kBottomCenterY  = kBottomAreaH;          // 底部区域中心 y
+static const float kPlayFieldY     = kBottomAreaH;
+static const float kBottomCenterY  = kBottomAreaH;
 
 static const float kStackCenterX   = kScreenW * 0.25f;     // 270
 static const float kTrayCenterX    = kScreenW * 0.75f;     // 810
 static const float kUndoCenterX    = kScreenW * 0.5f;      // 540
 static const float kUndoCenterY    = 80.0f;
-
-static const float kCardWidth  = 182.0f;
-static const float kCardHeight = 282.0f;
 
 GameView* GameView::create()
 {
@@ -34,6 +31,7 @@ bool GameView::init()
     if (!Node::init())
         return false;
 
+    _undoEnabled = false;
     setContentSize(Size(kScreenW, kScreenH));
     setAnchorPoint(Vec2::ZERO);
 
@@ -60,7 +58,7 @@ void GameView::_initLayout()
         addChild(_playFieldView, 1);
     }
 
-    // --- 备用牌堆（左半底部，以中心定位） ---
+    // --- 备用牌堆（左半底部） ---
     _stackView = StackView::create();
     if (_stackView)
     {
@@ -72,7 +70,7 @@ void GameView::_initLayout()
     _trayView = TrayView::create();
     if (_trayView)
     {
-        _trayView->setPosition(Vec2(kTrayCenterX, kBottomCenterY * 0.75f + 140 /* Visual fix */));
+        _trayView->setPosition(Vec2(kTrayCenterX, kBottomCenterY * 0.75f + 140));
         addChild(_trayView, 1);
     }
 
@@ -82,35 +80,49 @@ void GameView::_initLayout()
 
 void GameView::_setupUndoButton()
 {
-    _undoLabel = Label::createWithSystemFont("Undo", "Arial", 48);
-    if (!_undoLabel) return;
+    _undoSprite = Sprite::create("views/ui/undo.png");
+    if (!_undoSprite) return;
 
-    _undoLabel->setPosition(Vec2(kUndoCenterX, kUndoCenterY));
-    _undoLabel->setColor(Color3B::WHITE);
-    addChild(_undoLabel, 2);
+    _undoSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+    _undoSprite->setPosition(Vec2(kUndoCenterX, kUndoCenterY));
+    _undoSprite->setOpacity(80); // 初始禁用状态：半透明
+    addChild(_undoSprite, 2);
 
     auto listener = EventListenerTouchOneByOne::create();
     listener->setSwallowTouches(true);
 
+    // 固定点击热区 285×117，整体上移半个按钮高度对齐图片
+    static const float kBtnW = 285.0f;
+    static const float kBtnH = 117.0f;
+    static const Rect  kBtnRect(0.0f, 0.0f, kBtnW, kBtnH);
+
     listener->onTouchBegan = [this](Touch* touch, Event*) -> bool
     {
-        if (!_undoLabel->isVisible()) return false;
-        Vec2 local = _undoLabel->convertToNodeSpace(touch->getLocation());
-        Size size  = _undoLabel->getContentSize();
-        Rect bounds(-size.width * 0.5f, -size.height * 0.5f, size.width * 1.5f, size.height * 1.5f);
-        return bounds.containsPoint(local);
+        if (!_undoEnabled || !_undoSprite->isVisible()) return false;
+        Vec2 local = _undoSprite->convertToNodeSpace(touch->getLocation());
+        return kBtnRect.containsPoint(local);
     };
 
     listener->onTouchEnded = [this](Touch* touch, Event*)
     {
-        Vec2 local = _undoLabel->convertToNodeSpace(touch->getLocation());
-        Size size  = _undoLabel->getContentSize();
-        Rect bounds(-size.width * 0.5f, -size.height * 0.5f, size.width * 1.5f, size.height * 1.5f);
-        if (bounds.containsPoint(local) && _onUndoClickCallback)
-            _onUndoClickCallback();
+        if (!_undoEnabled) return;
+        Vec2 local = _undoSprite->convertToNodeSpace(touch->getLocation());
+        if (!kBtnRect.containsPoint(local)) return;
+
+        // 跳动效果：快速放大 → 回弹 → 恢复
+        _undoSprite->stopAllActions();
+        auto bounce = Sequence::create(
+            ScaleTo::create(0.08f, 1.25f),
+            ScaleTo::create(0.06f, 0.88f),
+            ScaleTo::create(0.05f, 1.0f),
+            CallFunc::create([this]() {
+                if (_onUndoClickCallback) _onUndoClickCallback();
+            }),
+            nullptr);
+        _undoSprite->runAction(bounce);
     };
 
-    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, _undoLabel);
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, _undoSprite);
 }
 
 void GameView::setOnUndoClickCallback(std::function<void()> callback)
@@ -120,9 +132,7 @@ void GameView::setOnUndoClickCallback(std::function<void()> callback)
 
 void GameView::setUndoButtonEnabled(bool enabled)
 {
-    if (_undoLabel)
-    {
-        _undoLabel->setColor(enabled ? Color3B::WHITE : Color3B(120, 120, 120));
-        _undoLabel->setOpacity(enabled ? 255 : 150);
-    }
+    _undoEnabled = enabled;
+    if (_undoSprite)
+        _undoSprite->setOpacity(enabled ? 255 : 80);
 }

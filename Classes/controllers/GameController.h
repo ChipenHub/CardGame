@@ -47,7 +47,7 @@ private:
 
     // --- 视图 ---
     GameView*             _gameView;
-    cocos2d::Label*       _statusLabel; // 胜/败提示，有操作时清除
+    cocos2d::Node*        _statusSprite; // 胜/败提示图片，有操作时清除
 
     // --- 状态 ---
     bool _isAnimating;

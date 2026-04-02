@@ -7,7 +7,7 @@ USING_NS_CC;
 
 GameController::GameController()
     : _gameView(nullptr)
-    , _statusLabel(nullptr)
+    , _statusSprite(nullptr)
     , _isAnimating(false)
 {}
 
@@ -160,11 +160,11 @@ void GameController::_setAnimationLock(bool locked)
 
 void GameController::_checkGameState()
 {
-    // 每次重新检测前清除上一次的提示标签（Undo 后状态改变时自然消失）
-    if (_statusLabel)
+    // 每次重新检测前清除上一次的提示图片（Undo 后状态改变时自然消失）
+    if (_statusSprite)
     {
-        _statusLabel->removeFromParent();
-        _statusLabel = nullptr;
+        _statusSprite->removeFromParent();
+        _statusSprite = nullptr;
     }
 
     if (_playFieldController.isPlayFieldCleared())
@@ -180,24 +180,38 @@ void GameController::_checkGameState()
         _onGameLose();
 }
 
+// 弹出动画：从 0 缩放 → 略微过冲 → 稳定在 1.0
+static void playPopIn(cocos2d::Node* node)
+{
+    node->setScale(0.0f);
+    auto anim = cocos2d::Sequence::create(
+        cocos2d::ScaleTo::create(0.18f, 1.12f),
+        cocos2d::ScaleTo::create(0.08f, 0.92f),
+        cocos2d::ScaleTo::create(0.06f, 1.0f),
+        nullptr);
+    node->runAction(anim);
+}
+
 void GameController::_onGameWin()
 {
-    _statusLabel = Label::createWithSystemFont("YOU WIN!", "Arial", 80);
-    if (_statusLabel && _gameView)
-    {
-        _statusLabel->setPosition(Vec2(540, 1040));
-        _statusLabel->setColor(Color3B(50, 200, 50));
-        _gameView->addChild(_statusLabel, 999);
-    }
+    if (!_gameView) return;
+    auto* sprite = Sprite::create("views/ui/success.png");
+    if (!sprite) return;
+    sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+    sprite->setPosition(Vec2(540, 1040));
+    _gameView->addChild(sprite, 999);
+    _statusSprite = sprite;
+    playPopIn(sprite);
 }
 
 void GameController::_onGameLose()
 {
-    _statusLabel = Label::createWithSystemFont("NO MORE MOVES", "Arial", 60);
-    if (_statusLabel && _gameView)
-    {
-        _statusLabel->setPosition(Vec2(540, 1040));
-        _statusLabel->setColor(Color3B(200, 50, 50));
-        _gameView->addChild(_statusLabel, 999);
-    }
+    if (!_gameView) return;
+    auto* sprite = Sprite::create("views/ui/no_more_moves.png");
+    if (!sprite) return;
+    sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+    sprite->setPosition(Vec2(540, 1040));
+    _gameView->addChild(sprite, 999);
+    _statusSprite = sprite;
+    playPopIn(sprite);
 }
