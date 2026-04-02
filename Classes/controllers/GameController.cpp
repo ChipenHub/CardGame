@@ -57,12 +57,8 @@ void GameController::_populateViews()
         else
             cv->showBack();
 
-        // // JSON 使用 y-down 坐标系，cocos2d 使用 y-up，需镜像 y
-        // static const float kPlayFieldHeight = 1500.0f;
-        // float displayY = kPlayFieldHeight - card.position.y;
-        // z 值：configY 越大（越靠下/前景）z 越高，确保前景牌渲染在背景牌之上
-        int zOrder = static_cast<int>(card.position.y);
-        pfView->addCardView(cv, cocos2d::Vec2(card.position.x, card.position.y), -zOrder);
+        // 后放的牌 id 更大，z 更高，渲染在上层（透视关系）
+        pfView->addCardView(cv, cocos2d::Vec2(card.position.x, card.position.y), card.id);
     }
 
     // --- 备用牌堆：初始化背面牌数量 ---

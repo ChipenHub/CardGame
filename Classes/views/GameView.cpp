@@ -14,6 +14,9 @@ static const float kTrayCenterX    = kScreenW * 0.75f;     // 810
 static const float kUndoCenterX    = kScreenW * 0.5f;      // 540
 static const float kUndoCenterY    = 80.0f;
 
+static const float kCardWidth  = 182.0f;
+static const float kCardHeight = 282.0f;
+
 GameView* GameView::create()
 {
     GameView* view = new (std::nothrow) GameView();
@@ -61,7 +64,7 @@ void GameView::_initLayout()
     _stackView = StackView::create();
     if (_stackView)
     {
-        _stackView->setPosition(Vec2(kStackCenterX, kBottomCenterY));
+        _stackView->setPosition(Vec2(kStackCenterX * 1.75f, kBottomCenterY * 0.75f));
         addChild(_stackView, 1);
     }
 
@@ -69,7 +72,7 @@ void GameView::_initLayout()
     _trayView = TrayView::create();
     if (_trayView)
     {
-        _trayView->setPosition(Vec2(kTrayCenterX, kBottomCenterY));
+        _trayView->setPosition(Vec2(kTrayCenterX, kBottomCenterY * 0.75f + 140 /* Visual fix */));
         addChild(_trayView, 1);
     }
 

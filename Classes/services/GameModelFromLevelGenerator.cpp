@@ -19,7 +19,10 @@ GameModel GameModelFromLevelGenerator::generate(const LevelConfig& config)
         card.id       = nextId++;
         card.face     = cfg.face;
         card.suit     = cfg.suit;
-        card.position = cfg.position;
+        cocos2d::Vec2 t = cfg.position;
+        t.x += kCardWidth / 2;
+        t.y += kCardHeight / 2;
+        card.position = t;
         card.faceUp   = true; // 先设为 false，遮挡计算后再修正
         playfieldCards.push_back(card);
     }
